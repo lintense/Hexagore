@@ -29,7 +29,7 @@ public class SingleChooser extends Panel {
 	List<? extends Entity> first;
 	
 	// https://docs.oracle.com/javase/tutorial/uiswing/layout/gridbag.html
-	public SingleChooser(String message, List<? extends Entity> first, GraphDrawer gd){
+	public SingleChooser(String message, List<? extends Entity> first){
 		
 		this.first = first;
 		SingleChooser me = this;
@@ -58,7 +58,7 @@ public class SingleChooser extends Panel {
 	        c.weightx = 1.0;
 	        c.weighty = 1.0;
 	        c.gridheight = 2;
-	        GraphButton master = new GraphButton(index++, gd, bs, ej);
+	        GraphButton master = new GraphButton(index++, bs, ej);
 	        gridbag.setConstraints(master, c);
 	        add(master);
 	        master.start();
@@ -120,11 +120,11 @@ public class SingleChooser extends Panel {
 	    private final Point2D size;
 	    private boolean selected = false;
 	    
-	    GraphButton(int id, GraphDrawer gd, Point2D size, Entity entity){
+	    GraphButton(int id, Point2D size, Entity entity){
 	    	this.id = id;
 	    	this.dim = new Dimension(size.x, size.y);
 	    	this.entity = entity;
-	    	this.gd = gd;
+	    	this.gd = GraphDrawer.getDrawer(entity);
 	    	this.size = size;
 	    }
 
@@ -132,7 +132,7 @@ public class SingleChooser extends Panel {
 	    	Graphics2D g2d = (Graphics2D) g;
 	    	ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
 	    	BufferedImageOp op = new ColorConvertOp(cs, null);
-	    	g2d.drawImage(gd.resizeImage(entity.getPieceIndex(), size), selected ? null : op, 0, 0);
+	    	g2d.drawImage(gd.resizeImage(entity.getPropIndex(), size), selected ? null : op, 0, 0);
 	    }
 	    public void unselect() {
 	    	selected = false;

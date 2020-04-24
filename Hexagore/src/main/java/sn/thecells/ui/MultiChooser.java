@@ -33,7 +33,7 @@ public class MultiChooser extends Panel {
 	List<? extends Entity> second;
 	
 	// https://docs.oracle.com/javase/tutorial/uiswing/layout/gridbag.html
-	public MultiChooser(String message, List<? extends Entity> first, List<? extends Entity> second, GraphDrawer gd){
+	public MultiChooser(String message, List<? extends Entity> first, List<? extends Entity> second){
 		
 		this.first = first;
 		this.second = second;
@@ -63,7 +63,7 @@ public class MultiChooser extends Panel {
 	        c.weightx = 1.0;
 	        c.weighty = 1.0;
 	        c.gridheight = 2;
-	        GraphButton master = new GraphButton(index++, null, gd, bs, ej);
+	        GraphButton master = new GraphButton(index++, null, bs, ej);
 	        gridbag.setConstraints(master, c);
 	        add(master);
 	        buttons.add(master);
@@ -71,7 +71,7 @@ public class MultiChooser extends Panel {
         
 	        for (Iterator<? extends Entity> i = second.iterator(); i.hasNext();) {
 	        	Entity ei = i.next();
-	        	GraphButton button = new GraphButton(index++, master, gd, bs, ei);
+	        	GraphButton button = new GraphButton(index++, master, bs, ei);
 	        	if (!i.hasNext())
 	        		c.gridwidth = GridBagConstraints.REMAINDER;
 	            gridbag.setConstraints(button, c);
@@ -164,12 +164,12 @@ public class MultiChooser extends Panel {
 	    private final GraphButton master;
 	    private List<GraphButton> children = new ArrayList();
 	    
-	    GraphButton(int id, GraphButton master, GraphDrawer gd, Point2D size, Entity entity){
+	    GraphButton(int id, GraphButton master, Point2D size, Entity entity){
 	    	this.id = id;
 	    	this.master = master;
 	    	this.dim = new Dimension(size.x, size.y);
 	    	this.entity = entity;
-	    	this.gd = gd;
+	    	this.gd = GraphDrawer.getDrawer(entity);
 	    	this.size = size;
 	    	if (master != null)
 	    		master.children.add(this);
@@ -179,7 +179,7 @@ public class MultiChooser extends Panel {
 	    	Graphics2D g2d = (Graphics2D) g;
 	    	ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
 	    	BufferedImageOp op = new ColorConvertOp(cs, null);
-	    	g2d.drawImage(gd.resizeImage(entity.getPieceIndex(), size), selected ? null : op, 0, 0);
+	    	g2d.drawImage(gd.resizeImage(entity.getPropIndex(), size), selected ? null : op, 0, 0);
 	    }
 	    public void unselect() {
 	    	selected = false;

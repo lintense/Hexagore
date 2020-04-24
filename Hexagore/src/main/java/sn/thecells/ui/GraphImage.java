@@ -1,21 +1,15 @@
 package sn.thecells.ui;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.stream.ImageInputStream;
 
 import net.sf.javavp8decoder.imageio.WebPImageReaderSpi;
+import sn.thecells.support.Common;
 import sn.thecells.support.Point2D;
 
 public class GraphImage {
@@ -32,11 +26,11 @@ public class GraphImage {
 	public GraphImage(URL imageURL) {
 //		File imageFile = urlToFile(imageURL);
 //		Image sourceImage = null;
-		try {
-			File f = urlToFile(imageURL);
-			InputStream stream = new BufferedInputStream(new FileInputStream(f));
-	        ImageInputStream webPImageInputStream = ImageIO.createImageInputStream(stream);
-	        image = ImageIO.read(webPImageInputStream);
+
+		try
+		{
+			ImageInputStream webPImageInputStream = ImageIO.createImageInputStream(Common.urlToStream(imageURL));
+	        image = ImageIO.read(webPImageInputStream); // webPImageInputStream is closed here!
 //	        System.out.println("Image type: " + sourceImage.getType());
 			
 ////			sourceImage = ImageIO.read(imageURL); //imageFile);
@@ -58,7 +52,7 @@ public class GraphImage {
 //			graphics.dispose();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block\
-			System.out.println("Not found: " + imageURL);
+			System.out.println("Not found: " + Common.urlToFile(imageURL));
 			e1.printStackTrace();
 		}
 	}
@@ -85,13 +79,5 @@ public class GraphImage {
 //		    repaint();
 //		}
 //	}
-	private File urlToFile(URL url) {
-		try {
-			return Paths.get(url.toURI()).toFile();
-		} catch (URISyntaxException e1) {
-			System.out.println("Cannot find url: " + url);
-			e1.printStackTrace();
-		}
-		return null;
-	}
+
 }

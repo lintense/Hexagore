@@ -1,17 +1,13 @@
 package sn.thecells.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
@@ -19,6 +15,7 @@ import java.awt.TextField;
 import javax.swing.BoxLayout;
 
 import sn.thecells.control.GameController;
+import sn.thecells.entity.Entity;
 import sn.thecells.support.Point2D;
 
 public class TextInput extends Panel {
@@ -29,7 +26,7 @@ public class TextInput extends Panel {
 	
 	TextField text;
 	
-	public TextInput(String message, int index, GraphDrawer gd, String suggestion){
+	public TextInput(String message, String suggestion, Entity entity){
 		
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -38,8 +35,9 @@ public class TextInput extends Panel {
 		setBackground(new Color(50, 210, 250, 150));
 //		setVisible(true);
 		
+		 
 		Point2D imageSize = new Point2D(150,150);
-		GraphButton image = new GraphButton(0, gd, imageSize, index);
+		GraphButton image = new GraphButton(0, imageSize, entity);
 		image.setBackground(Color.WHITE);
         add(wrapInPanel(image));
         image.start();
@@ -74,13 +72,12 @@ public class TextInput extends Panel {
 	    private final Dimension dim;
 	    private final GraphDrawer gd;
 	    private final Point2D size;
-	    private boolean selected = false;
 	    
-	    GraphButton(int id,GraphDrawer gd, Point2D size, int index){
+	    GraphButton(int id, Point2D size, Entity entity){
 	    	this.id = id;
 	    	this.dim = new Dimension(size.x, size.y);
-	    	this.index = index;
-	    	this.gd = gd;
+	    	this.index = entity.getPropIndex();
+	    	this.gd = GraphDrawer.getDrawer(entity);
 	    	this.size = size;
 	    }
 

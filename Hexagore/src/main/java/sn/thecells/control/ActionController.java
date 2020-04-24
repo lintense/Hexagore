@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import sn.thecells.command.CommandContext;
 import sn.thecells.command.ICommand;
 import sn.thecells.command.SpawnHere;
+import sn.thecells.entity.Entity;
+import sn.thecells.entity.Piece;
 import sn.thecells.support.Point2D;
 import sn.thecells.ui.GraphDrawer;
 import sn.thecells.ui.GraphImage;
@@ -40,7 +42,7 @@ public class ActionController {
 	private int x = 0; //-GraphDrawer.BOARD_START_X;
 	private int y = 0; //-GraphDrawer.BOARD_START_Y;
 	private GraphImage image;
-	private GraphDrawer drawer;
+//	private GraphDrawer drawer;
 	private GraphPanel panel;
 	private CommandContext context;
 //	private Random random = new Random();
@@ -64,7 +66,7 @@ public class ActionController {
 		this.p = p;
 //		this.codeBase = codeBase;
 		getImage();
-		getDrawer();
+//		getDrawer();
 	}
 	public void init(GraphPanel mainPanel) {
 		ICommand com;
@@ -101,13 +103,13 @@ public class ActionController {
 		}
 		return image;
 	}
-	public GraphDrawer getDrawer() {
-		if (drawer == null) {
-			URL imageURL = this.getClass().getClassLoader().getResource("\\img\\pieces_210x226.png");
-			drawer = new GraphDrawer(imageURL);
-		}
-		return drawer;
-	}
+//	public GraphDrawer getDrawer() {
+//		if (drawer == null) {
+//			URL imageURL = this.getClass().getClassLoader().getResource("\\img\\pieces_210x226.png");
+//			drawer = new GraphDrawer(imageURL);
+//		}
+//		return drawer;
+//	}
 	private Point2D getOffset() {
 		return new Point2D(x, y);
 	}
@@ -118,27 +120,33 @@ public class ActionController {
 	}
 
 
-	public void test(int dx, int dy) {
-		
-//		GraphMenu mainFrame	= new GraphMenu();
-//		mainFrame.setLocation(dx, dy);
-//		mainFrame.setVisible( true );
-		
-		Point2D drawingPoint = getDrawingPointForMouse(dx, dy);
-		int index = (int)Math.floor(Math.random() * 7);
-		//getDrawer().drawPiece(image.getImage(), index, getDrawer().getCoordinate(drawingPoint));
-		getDrawer().drawPiece(image.getImage(), index, drawingPoint, new Point2D(60,60));
-	}
-	public void test(Point2D drawingPoint) {
+//	public void test(int dx, int dy) { // TODO - To be removed
+//		
+////		GraphMenu mainFrame	= new GraphMenu();
+////		mainFrame.setLocation(dx, dy);
+////		mainFrame.setVisible( true );
+//		
+//		Point2D drawingPoint = getDrawingPointForMouse(dx, dy);
+////		int index = (int)Math.floor(Math.random() * 7);
+//		//getDrawer().drawPiece(image.getImage(), index, getDrawer().getCoordinate(drawingPoint));
+//		GraphDrawer
+//			.getDrawer(Entity.extractAnyEntity(Piece.getAllForType(Piece.TYPE_PLAYER)))
+//			.drawPiece(image.getImage(), index, drawingPoint, new Point2D(60,60));
+//	}
+	public void test(Point2D drawingPoint) { // TODO - To be removed
 		
 //		GraphMenu mainFrame	= new GraphMenu();
 //		mainFrame.setLocation(dx, dy);
 //		mainFrame.setVisible( true );
 		
 //		Point2D drawingPoint = getDrawingPointForMouse(dx, dy);
-		int index = (int)Math.floor(Math.random() * 7);
+//		int index = (int)Math.floor(Math.random() * 7);
 		//getDrawer().drawPiece(image.getImage(), index, getDrawer().getCoordinate(drawingPoint));
-		getDrawer().drawPiece(image.getImage(), index, drawingPoint, new Point2D(60,60));
+		
+//		getDrawer().drawPiece(image.getImage(), index, drawingPoint, new Point2D(60,60));
+		
+		Entity p = Entity.extractAnyEntity(Piece.getAllForType(Piece.TYPE_PLAYER));
+		GraphDrawer.getDrawer(p).drawPiece(image.getImage(), p.getPropIndex(), drawingPoint, new Point2D(60,60));
 	}
 
 	public boolean isInsidePanel(int x, int y) {

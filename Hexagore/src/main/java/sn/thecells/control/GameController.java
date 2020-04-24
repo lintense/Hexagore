@@ -9,6 +9,8 @@ import sn.thecells.entity.Card;
 import sn.thecells.entity.Entity;
 import sn.thecells.entity.Opponent;
 import sn.thecells.entity.Piece;
+import sn.thecells.support.Common;
+import sn.thecells.support.Label;
 import sn.thecells.ui.MessagePanel;
 import sn.thecells.ui.MultiChooser;
 import sn.thecells.ui.TextInput;
@@ -36,7 +38,7 @@ public class GameController extends Thread {
     public void run() {
 		// Prepare game deck!
 		List<Card> allCards = Card.getAllCards();
-		List<Card> gameDeck = extractSomeEntities(allCards, 40).stream().map(c -> (Card)c).collect(Collectors.toList());
+		List<Card> gameDeck = Entity.extractSomeEntities(allCards, 40).stream().map(c -> (Card)c).collect(Collectors.toList());
 		
 		setup(); // Prepare the game!
 
@@ -49,7 +51,7 @@ public class GameController extends Thread {
 		
 		// Ask number of players
 		MultiChooser mc;
-		ac.showMessage(mc = new MultiChooser("Select players:", Piece.getAllForType(Piece.TYPE_PLAYER), Opponent.getAll(), ac.getDrawer()));
+		ac.showMessage(mc = new MultiChooser("Select players:", Piece.getAllForType(Piece.TYPE_PLAYER), Opponent.getAll()));
 		pauseGame();
 		Map<Entity, Entity> sel = mc.getSelection();
 		sel.entrySet().stream().forEach(e -> ((Piece)e.getKey()).setOpponent((Opponent)e.getValue()));
@@ -60,12 +62,12 @@ public class GameController extends Thread {
 		sel.keySet().stream().forEach(e -> {
 			TextInput ti;
 			Piece op = (Piece)e;
-			ac.showMessage(ti = new TextInput("Player " + (op.id + 1) + " please enter your name:", op.getPieceIndex(), ac.getDrawer(), extractAny(randomNames)));
+			ac.showMessage(ti = new TextInput(Label.get("ask.enter.player$0.name", op.label), Common.extractAny(randomNames), op));
 			pauseGame();
 			op.setName(ti.getText());
 		});
 		
-		sel = sel;
+		sel = sel; // TODO Use a context
 		
 		
 		// Prepare 
@@ -77,27 +79,7 @@ public class GameController extends Thread {
 
 		
 	}
-//	private void wait(Pannel pane, ActionController ac) {
-//		Panel mp;
-//		ac.showMessage(mp = new MessagePanel("Welcome to Hexagore!"));
-//		while(mp.state == 0) {
-//			Thread.sleep(100); 
-//		};
-//	}
-//
-//	@Override
-//	public void run() {
-//		Thread me = Thread.currentThread();
-//		while (timer == me) {
-//			ec.timerEvent();
-//		    try {
-//		    	Thread.sleep(1000);
-//		    } catch (InterruptedException e) {
-//		    	break;
-//		    }
-//		}
-//		
-//	}
+
     private void pauseGame()
     {
         try {
@@ -110,18 +92,5 @@ public class GameController extends Thread {
 			e.printStackTrace();
 		}
     }
-    private String extractAny(List<String> ss) {
-    	int index = (int)Math.floor(Math.random() * ss.size());
-    	return ss.remove(index);
-    }
-    private Entity extractAnyEntity(List<? extends Entity> ss) {
-    	int index = (int)Math.floor(Math.random() * ss.size());
-    	return ss.remove(index);
-    }
-    private List<Entity> extractSomeEntities(List<? extends Entity> entities, int count){
-    	List<Entity> result = new ArrayList<Entity>();
-    	for (int i = 0; i < count && !entities.isEmpty(); i++)
-    		result.add(extractAnyEntity(entities));
-    	return result;
-    }
+
 }
