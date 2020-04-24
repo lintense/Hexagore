@@ -30,9 +30,6 @@ public class Opponent extends Entity {
 		super(label, propFile, propIndex);
 		this.type = type;
 	}
-	public static List<String> getSomeNames() {
-		return new ArrayList<String>(Arrays.asList(Label.get("Opponent.names").split(",")));
-	}
 	public static List<Opponent> getAll(){
 		return Arrays.asList(opponents);
 	}

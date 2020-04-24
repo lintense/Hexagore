@@ -52,14 +52,14 @@ public class Piece extends Entity {
 	
 	/// Dynamic properties ///
 	
-	public String name;
-	public Opponent opponent;
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	public void setOpponent(Opponent opponent) {
-		this.opponent = opponent;
-	}
+//	public String name;
+//	public Opponent opponent;
+//	
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+//	public void setOpponent(Opponent opponent) {
+//		this.opponent = opponent;
+//	}
 
 }

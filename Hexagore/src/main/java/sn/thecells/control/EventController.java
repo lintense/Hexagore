@@ -19,6 +19,7 @@ import java.awt.event.WindowListener;
 import sn.thecells.control.ActionController.Mover;
 import sn.thecells.entity.Hexagon;
 import sn.thecells.support.Point2D;
+import sn.thecells.ui.HexagonChooser;
 
 public class EventController extends WindowAdapter implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ItemListener, ComponentListener, WindowListener {
 
@@ -26,8 +27,8 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 //	boolean mousePressed = false;
 	Mover mover = null;
 //	boolean mouseEntered = true;
-	int mouseX;
-	int mouseY;
+	int mouseX; // TODO useless?
+	int mouseY; // TODO useless?
 	int button;
 	ActionController ac;
 //	Graph p;
@@ -49,8 +50,6 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 		button = e.getButton();
 		if (button == MouseEvent.BUTTON1) {
 			Point2D drawingPoint = ac.getDrawingPointForMouse(e.getX(), e.getY());
-			
-			
 			Hexagon hex = Hexagon.getHex(drawingPoint);
 			if (hex != null)
 				ac.test(hex.center);
@@ -89,6 +88,16 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 	public void mouseMoved(MouseEvent e) {
 		mouseX = e.getX();
 		mouseY = e.getY();
+		
+		if (true) { // TODO Avoid this process whenever possible...
+			Point2D drawingPoint = ac.getDrawingPointForMouse(e.getX(), e.getY());
+			Hexagon hex = Hexagon.getHex(drawingPoint);
+			if (hex != null) {
+				ac.p.setCursor(HexagonChooser.cursor);
+			} else {
+				ac.p.setCursor(null);
+			}
+		}
 	}
 
 	public void mousePressed(MouseEvent e) {

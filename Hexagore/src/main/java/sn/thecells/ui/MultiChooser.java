@@ -2,9 +2,7 @@ package sn.thecells.ui;
 
 import java.awt.Button;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -40,12 +38,10 @@ public class MultiChooser extends Panel {
 		MultiChooser me = this;
 		GridBagLayout gridbag = new GridBagLayout();
         setLayout(gridbag);
-//        setMaximumSize(new Dimension(500, 570));
-        setFont(new Font("SansSerif", Font.PLAIN, 20));
-        setBackground(new Color(50, 210, 250, 150));
+        setFont(Application.MESSAGE_FONT);
+        setBackground(Application.MESSAGE_BACKGROUND_COLOR);
         
         GridBagConstraints c = new GridBagConstraints();
-        
         c.fill = GridBagConstraints.CENTER;
         c.weightx = 4.0;
         c.gridwidth = GridBagConstraints.REMAINDER; //end row
@@ -86,15 +82,6 @@ public class MultiChooser extends Panel {
 	    		});	
 	        }
         }
-//        TextField text = new TextField();
-//		setFont(new Font("SansSerif", Font.PLAIN, 14));
-//        text.setText("Opponent name!");
-//        text.setEditable(true);
-//        c.weightx = 0.0;
-//        c.gridwidth = GridBagConstraints.REMAINDER; //end row
-//        gridbag.setConstraints(text, c);
-//        add(text);
-        
         
         Button popupCloseButton = new Button("Ok!");
         c.weightx = 0.0;

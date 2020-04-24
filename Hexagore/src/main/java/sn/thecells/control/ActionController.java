@@ -98,7 +98,7 @@ public class ActionController {
 	public GraphImage getImage() {
 		
 		if (image == null) {
-			URL url = this.getClass().getClassLoader().getResource("\\img\\board.png");
+			URL url = this.getClass().getClassLoader().getResource("\\img\\board.png"); // TODO...
 			image = new GraphImage(url);
 		}
 		return image;

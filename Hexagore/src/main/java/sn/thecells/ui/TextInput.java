@@ -2,10 +2,8 @@ package sn.thecells.ui;
 
 import java.awt.Button;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Label;
@@ -20,34 +18,26 @@ import sn.thecells.support.Point2D;
 
 public class TextInput extends Panel {
 
-//	private final List<GraphButton> buttons = new ArrayList();
-//	List<? extends Entity> first;
-//	List<? extends Entity> second;
-	
-	TextField text;
-	
+	private TextField text;
 	public TextInput(String message, String suggestion, Entity entity){
 		
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-//		setMaximumSize(new Dimension(150, 170));
-		setBackground(new Color(50, 210, 250, 150));
-//		setVisible(true);
-		
-		 
+        setFont(Application.MESSAGE_FONT);
+        setBackground(Application.MESSAGE_BACKGROUND_COLOR);
+
 		Point2D imageSize = new Point2D(150,150);
 		GraphButton image = new GraphButton(0, imageSize, entity);
-		image.setBackground(Color.WHITE);
+		image.setBackground(Application.MESSAGE_IMAGE_BACKGROUND_COLOR);
         add(wrapInPanel(image));
         image.start();
 		
 		Label label = new Label(message);
-		label.setFont(new Font("SansSerif", Font.PLAIN, 20));
+		label.setFont(Application.MESSAGE_FONT);
 		add(label);
 		
 		text = new TextField();
-		text.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		text.setFont(Application.MESSAGE_INPUT_FONT);
 		text.setText(suggestion == null ? "" : suggestion);
 		text.setEditable(true);
 		add(text);
@@ -91,7 +81,7 @@ public class TextInput extends Panel {
 	}
 	private static Panel wrapInPanel(Component component) {
 	      Panel jPanel = new Panel();
-	      jPanel.setBackground(new Color(50, 210, 250, 150));
+	      jPanel.setBackground(Application.MESSAGE_BACKGROUND_COLOR);
 	      jPanel.add(component);
 	      return jPanel;
 	  }

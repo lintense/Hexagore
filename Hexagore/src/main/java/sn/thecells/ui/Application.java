@@ -10,6 +10,11 @@ import sn.thecells.control.GameController;
 
 public class Application extends Frame implements Runnable {
 
+	public static final Font MESSAGE_FONT = new Font("SansSerif", Font.PLAIN, 20);
+	public static final Font MESSAGE_INPUT_FONT = new Font("SansSerif", Font.PLAIN, 16);
+	public static final Color MESSAGE_IMAGE_BACKGROUND_COLOR = Color.WHITE;
+	public static final Color MESSAGE_BACKGROUND_COLOR = new Color(50, 210, 250, 150);
+	
 	ActionController ac;
 	EventController ec;
 	

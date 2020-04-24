@@ -18,6 +18,7 @@ public class Hexagon extends Entity {
 	public static final Hexagon[] hexes;
 	
 	private static final String FILE_HEX = "TO_BE_CREATED";
+	private static final int NEIGHBORS_SQUARED_DIST = 1000;
 	
 	static {
 		int i = 0;
@@ -110,7 +111,7 @@ public class Hexagon extends Entity {
 	}
 	public static Hexagon getHex(Point2D p) {
 		for (int i = 0; i < hexes.length; i++)
-			if (hexes[i].getDistSquared(p) < 1000)
+			if (hexes[i].getDistSquared(p) < NEIGHBORS_SQUARED_DIST)
 				return hexes[i];
 		return null;
 	}
