@@ -14,9 +14,10 @@ import javax.swing.BoxLayout;
 
 import sn.thecells.control.GameController;
 import sn.thecells.entity.Entity;
+import sn.thecells.generic.InputRequest;
 import sn.thecells.support.Point2D;
 
-public class TextInput extends Panel {
+public class TextInput extends Panel implements InputRequest {
 
 	private TextField text;
 	public TextInput(String message, String suggestion, Entity entity){
@@ -42,14 +43,14 @@ public class TextInput extends Panel {
 		text.setEditable(true);
 		add(text);
 		
-		Button popupCloseButton = new Button("Ok!");
-		add(wrapInPanel(popupCloseButton));
-		
-		popupCloseButton.addActionListener(e -> {
-			getParent().setVisible(false);
-			getParent().getParent().validate();
-			GameController.resumeGame();
-		});
+//		Button popupCloseButton = new Button("Ok!");
+//		add(wrapInPanel(popupCloseButton));
+//		
+//		popupCloseButton.addActionListener(e -> {
+//			getParent().setVisible(false);
+//			getParent().getParent().validate();
+//			GameController.resumeGame();
+//		});
 	}
 	public String getText() {
 		return text.getText();

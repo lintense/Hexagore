@@ -3,6 +3,7 @@ package sn.thecells.ui;
 import java.awt.Button;
 import java.awt.Canvas;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,9 +22,10 @@ import java.util.List;
 
 import sn.thecells.control.GameController;
 import sn.thecells.entity.Entity;
+import sn.thecells.generic.InputRequest;
 import sn.thecells.support.Point2D;
 
-public class SingleChooser extends Panel {
+public class SingleChooser extends Panel implements InputRequest {
 
 	private final List<GraphButton> buttons = new ArrayList();
 	List<? extends Entity> first;
@@ -81,32 +83,41 @@ public class SingleChooser extends Panel {
 
         }
 
-        Button popupCloseButton = new Button("Ok!");
-        c.weightx = 0.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gridbag.setConstraints(popupCloseButton, c);
-        add(wrapInPanel(popupCloseButton));
-	      
-		popupCloseButton.addActionListener(e -> {
-			getParent().setVisible(false);
-			getParent().getParent().validate();
-			GameController.resumeGame();
-		});
+//        Button popupCloseButton = new Button("Ok!");
+//        c.weightx = 0.0;
+//        c.gridwidth = GridBagConstraints.REMAINDER;
+//        gridbag.setConstraints(popupCloseButton, c);
+//        add(wrapInPanel(popupCloseButton));
+//	      
+//		popupCloseButton.addActionListener(e -> {
+//			getParent().setVisible(false);
+//			getParent().getParent().validate();
+//			GameController.resumeGame();
+//		});
 	}
 	public Entity getSelection() {
 		GraphButton but = buttons.stream().filter(c -> c.selected).findAny().orElse(null);
 		return but == null ? null : but.entity;
 	}
-	void onClick(GraphButton button) { // TODO pass button at other occurences...so much simpler!
+	private void updateButton() {
+		// Must disable only the button
+		// BAD This code is bad because it is knowing too much information...
+		((Container)getParent().getParent().getComponent(1)).getComponent(0).setEnabled(getSelection() != null);
+	}
+	@Override
+	public void setVisible(boolean b) {
+		updateButton();
+		super.setVisible(b);
+	}
+	void onClick(GraphButton button) { // FIXME pass button at other occurences...so much simpler!
+		button.selected = !button.selected;
+		button.repaint();
 		for (GraphButton b : buttons)
-			if (b.id == button.id) {
-				b.selected = !b.selected;
+			if (b != button && b.selected) {
+				b.unselect();
 				b.repaint();
-			} else 
-				if (b.selected) {
-					b.unselect();
-					b.repaint();
-				}
+			}
+		updateButton();
 	}
 
 	public class GraphButton extends Canvas{

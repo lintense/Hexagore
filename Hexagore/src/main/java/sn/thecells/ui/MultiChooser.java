@@ -22,9 +22,11 @@ import java.util.Map;
 
 import sn.thecells.control.GameController;
 import sn.thecells.entity.Entity;
+import sn.thecells.generic.InputRequest;
 import sn.thecells.support.Point2D;
+import sn.thecells.ui.SingleChooser.GraphButton;
 
-public class MultiChooser extends Panel {
+public class MultiChooser extends Panel implements InputRequest {
 
 	private final List<GraphButton> buttons = new ArrayList();
 	List<? extends Entity> first;
@@ -77,23 +79,23 @@ public class MultiChooser extends Panel {
 	            
 	            button.addMouseListener(new MouseAdapter(){
 	    			public void mouseClicked(MouseEvent e) {
-	    				me.onClick(button.id);
+	    				me.onClick(button);
 	    			}
 	    		});	
 	        }
         }
         
-        Button popupCloseButton = new Button("Ok!");
-        c.weightx = 0.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gridbag.setConstraints(popupCloseButton, c);
-        add(popupCloseButton);
-	      
-		popupCloseButton.addActionListener(e -> {
-			getParent().setVisible(false);
-			getParent().getParent().validate();
-			GameController.resumeGame();
-		});
+//        Button popupCloseButton = new Button("Ok!");
+//        c.weightx = 0.0;
+//        c.gridwidth = GridBagConstraints.REMAINDER;
+//        gridbag.setConstraints(popupCloseButton, c);
+//        add(popupCloseButton);
+//	      
+//		popupCloseButton.addActionListener(e -> {
+//			getParent().setVisible(false);
+//			getParent().getParent().validate();
+//			GameController.resumeGame();
+//		});
 
 //		frame.pack();
 //		frame.setVisible(true);
@@ -109,26 +111,26 @@ public class MultiChooser extends Panel {
 		});
 		return result;
 	}
-	void onClick(int buttonId) {
+	void onClick(GraphButton button) {
 		
 		// Retrieve selected button
-		GraphButton selected = buttons.stream().filter(b -> b.id == buttonId).findAny().get();
+//		GraphButton selected = buttons.stream().filter(b -> b.id == buttonId).findAny().get();
 		// Reverse selection of selected button
-		selected.selected = !selected.selected;
-		selected.repaint();
+		button.selected = !button.selected;
+		button.repaint();
 		
 		// If button is deselected, also deselect master
-		if (!selected.selected) {
-			if (selected.master.selected) {
-				selected.master.unselect();
-				selected.master.repaint();
+		if (!button.selected) {
+			if (button.master.selected) {
+				button.master.unselect();
+				button.master.repaint();
 			}
 		} else { // Otherwise, select master and all other children
-			if (!selected.master.selected) {
-				selected.master.select();
-				selected.master.repaint();
+			if (!button.master.selected) {
+				button.master.select();
+				button.master.repaint();
 			}
-			selected.master.children.stream().filter(b -> b.id != buttonId).forEach(b -> {
+			button.master.children.stream().filter(b -> b != button).forEach(b -> {
 				if (b.selected) {
 					b.unselect();
 					b.repaint();

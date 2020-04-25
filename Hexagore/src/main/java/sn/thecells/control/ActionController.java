@@ -1,5 +1,7 @@
 package sn.thecells.control;
 
+import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -20,10 +22,10 @@ import sn.thecells.command.SpawnHere;
 import sn.thecells.entity.Entity;
 import sn.thecells.entity.Piece;
 import sn.thecells.support.Point2D;
+import sn.thecells.ui.Application;
 import sn.thecells.ui.GraphDrawer;
 import sn.thecells.ui.GraphImage;
 import sn.thecells.ui.GraphPanel;
-import sn.thecells.ui.MessagePanel;
 
 //import test.graphnet.moving.DefaultMoving;
 //import test.graphnet.moving.IMoving;
@@ -42,13 +44,10 @@ public class ActionController {
 	private int x = 0; //-GraphDrawer.BOARD_START_X;
 	private int y = 0; //-GraphDrawer.BOARD_START_Y;
 	private GraphImage image;
-//	private GraphDrawer drawer;
 	private GraphPanel panel;
 	private CommandContext context;
-//	private Random random = new Random();
-
+	
 	final Container p;
-//	final URL codeBase;
 	
 	final Color fixedColor = Color.red;
 //	final Color selectColor = Color.pink;
@@ -188,20 +187,55 @@ public class ActionController {
 			zoom(ZOOM_OUT_FACTOR, zoomx, zoomy);
 		checkZoom(zoomx, zoomy);
 	}
-	public void showMessage(Panel panel) {
-		p.add("North", wrapInPanel(panel));
+//	public void showComponent(Panel component) {
+//		Panel child;
+//		p.add("North", child = wrapInPanel(component));
+//
+//		child.setFont(Application.MESSAGE_FONT);
+//		Button popupCloseButton = new Button("Ok!!");
+//		child.add(wrapInPanel(popupCloseButton));
+//		
+//		panel.setVisible(true);
+//
+//		popupCloseButton.addActionListener(e -> {
+//			child.setVisible(false);
+//			child.getParent().validate();
+//			GameController.resumeGame();
+//		});
+//
+//		p.invalidate();
+//		p.validate();
+//		p.repaint();
+//	}
+	public void showComponent(Panel component) {
+		Panel compo = new Panel(new BorderLayout());
+//		compo.setVisible(true);
+		compo.setFont(Application.MESSAGE_FONT);
+		compo.add(wrapInPanel(component), BorderLayout.NORTH);
+		Button popupCloseButton = new Button("Ok!");
+		compo.add(wrapInPanel(popupCloseButton), BorderLayout.SOUTH);
+		
+		p.add("North", compo);
 		panel.setVisible(true);
+		component.setVisible(true); // Required for HexagonChooser.updateButton()
+
+		popupCloseButton.addActionListener(e -> {
+			compo.setVisible(false);
+			component.setVisible(false); // Required for ComponentListenerImpl
+			compo.getParent().validate();
+			GameController.resumeGame();
+		});
+
 		p.invalidate();
 		p.validate();
 		p.repaint();
 	}
 	private static Panel wrapInPanel(Component component) {
-	      Panel jPanel = new Panel();
-	      jPanel.setBackground(new Color(50, 210, 250, 150));
-	      jPanel.add(component);
-	      return jPanel;
-	  }
-	
+		Panel jPanel = new Panel();
+		jPanel.setBackground(Application.MESSAGE_BACKGROUND_COLOR);
+		jPanel.add(component);
+		return jPanel;
+	}
 	
 	public class Mover {
 		

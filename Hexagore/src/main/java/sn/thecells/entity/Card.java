@@ -13,7 +13,8 @@ public class Card extends Entity {
 	public static final int TYPE_COMPANION = 2;
 	public static final int TYPE_MONEY = 4;
 	public static final int TYPE_EVENT = 8;
-	public static final int TYPE_TRASHER = 16;
+	public static final int TYPE_TRASHER_X2 = 16;
+	public static final int TYPE_TRASHER_X3 = 32;
 	
 	public static final String FILE_COMPANIONS = "Companions_140x245";
 	public static final String FILE_EVENTS = "Companions_140x245";
@@ -22,7 +23,7 @@ public class Card extends Entity {
 	static {
 		int i = 0;
 		cards = new Card[] {
-			new Card("Card.1", FILE_COMPANIONS, i++, 1, TYPE_COMPANION, 1, false),
+			new Card("Card.1", FILE_COMPANIONS, i++, 1, TYPE_COMPANION, 6, false),
 			new Card("Card.2", FILE_COMPANIONS, i++, 1, TYPE_COMPANION, 1, false),
 			new Card("Card.3", FILE_COMPANIONS, i++, 2, TYPE_COMPANION, 1, false),
 			new Card("Card.4", FILE_COMPANIONS, i++, 2, TYPE_COMPANION, 1, false),
@@ -58,17 +59,17 @@ public class Card extends Entity {
 			new Card("Card.42", FILE_EVENTS, i++, -1, TYPE_EVENT, 1, false),
 			new Card("Card.43", FILE_EVENTS, i++, -1, TYPE_EVENT, 1, false),
 
-			new Card("Card.51", FILE_OTHERS, i++, 2, TYPE_MONEY, 1, false),
-			new Card("Card.52", FILE_OTHERS, i++, 2, TYPE_MONEY, 1, false),
-			new Card("Card.53", FILE_OTHERS, i++, 2, TYPE_MONEY, 1, false),
-			new Card("Card.54", FILE_OTHERS, i++, 2, TYPE_MONSTER | TYPE_TRASHER, 1, false),
-			new Card("Card.55", FILE_OTHERS, i++, 2, TYPE_MONSTER, 1, false),
-			new Card("Card.56", FILE_OTHERS, i++, 2, TYPE_MONSTER, 1, false),
-			new Card("Card.57", FILE_OTHERS, i++, 2, TYPE_MONSTER, 1, false),
-			new Card("Card.58", FILE_OTHERS, i++, 2, TYPE_MONSTER | TYPE_TRASHER, 1, false),
-			new Card("Card.59", FILE_OTHERS, i++, 2, TYPE_MONEY, 1, true),
-			new Card("Card.60", FILE_OTHERS, i++, 2, TYPE_MONSTER, 1, true),
-			new Card("Card.61", FILE_OTHERS, i++, 2, TYPE_COMPANION, 1, true)
+			new Card("Card.51", FILE_OTHERS, i++, 2, TYPE_MONEY, 8, false),
+			new Card("Card.52", FILE_OTHERS, i++, 3, TYPE_MONEY, 8, false),
+			new Card("Card.53", FILE_OTHERS, i++, 1, TYPE_MONEY, 16, false),
+			new Card("Card.54", FILE_OTHERS, i++, 1, TYPE_MONSTER | TYPE_TRASHER_X2, 2, false),
+			new Card("Card.55", FILE_OTHERS, i++, 1, TYPE_MONSTER, 6, false),
+			new Card("Card.56", FILE_OTHERS, i++, 2, TYPE_MONSTER, 8, false),
+			new Card("Card.57", FILE_OTHERS, i++, 3, TYPE_MONSTER, 6, false),
+			new Card("Card.58", FILE_OTHERS, i++, 1, TYPE_MONSTER | TYPE_TRASHER_X3, 1, false),
+			new Card("Card.59", FILE_OTHERS, i++, 1, TYPE_MONEY, 0, true),
+			new Card("Card.60", FILE_OTHERS, i++, 1, TYPE_MONSTER, 0, true),
+			new Card("Card.61", FILE_OTHERS, i++, 1, TYPE_COMPANION, 0, true)
 		};
 	}
 	

@@ -3,6 +3,7 @@ package sn.thecells.entity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import sn.thecells.support.Point2D;
 
@@ -90,12 +91,15 @@ public class Hexagon extends Entity {
 		this.center = new Point2D(x, y);
 		this.type = type;
 	}
-	public float getDistSquared(Point2D pp) {
+	private float getDistSquared(Point2D pp) {
 		Point2D r = center.minus(pp).squared();
 		return r.x + r.y;
 	}
-	void setNeighbors(List<Hexagon> neighbors) {
+	private void setNeighbors(List<Hexagon> neighbors) {
 		this.neighbors = neighbors;
+	}
+	public boolean containsPoint(Point2D p) {
+		return getDistSquared(p) < NEIGHBORS_SQUARED_DIST;
 	}
 	
 	private static List<Hexagon> getNeighbors(Hexagon prop) {
@@ -106,13 +110,16 @@ public class Hexagon extends Entity {
 				result.add(hexes[i]);
 		return result;
 	}
-	public static List<Hexagon> getHexes(){
-		return Arrays.asList(hexes);
+	public static List<Hexagon> getAllHexes(){
+		return new ArrayList<Hexagon>(Arrays.asList(hexes));
 	}
 	public static Hexagon getHex(Point2D p) {
 		for (int i = 0; i < hexes.length; i++)
-			if (hexes[i].getDistSquared(p) < NEIGHBORS_SQUARED_DIST)
+			if (hexes[i].containsPoint(p))
 				return hexes[i];
 		return null;
+	}
+	public static List<Hexagon> getHexesForType(int hexType){
+		return Arrays.stream(hexes).filter(h -> h.type == hexType).collect(Collectors.toList());
 	}
 }

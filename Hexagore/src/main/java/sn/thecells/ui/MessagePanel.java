@@ -7,9 +7,9 @@ import java.awt.Label;
 import java.awt.Panel;
 
 import sn.thecells.control.GameController;
+import sn.thecells.generic.InputRequest;
 
-public class MessagePanel extends Panel {
-
+public class MessagePanel extends Panel implements InputRequest {
 
 	public MessagePanel(String message){
 		super(new BorderLayout());
@@ -18,14 +18,14 @@ public class MessagePanel extends Panel {
 		
 		Label label = new Label(message);
 		add(wrapInPanel(label), BorderLayout.CENTER);
-		Button popupCloseButton = new Button("Ok!");
-		add(wrapInPanel(popupCloseButton), BorderLayout.SOUTH);
-		
-		popupCloseButton.addActionListener(e -> {
-			getParent().setVisible(false);
-			getParent().getParent().validate();
-			GameController.resumeGame();
-		});
+//		Button popupCloseButton = new Button("Ok!");
+//		add(wrapInPanel(popupCloseButton), BorderLayout.SOUTH);
+//		
+//		popupCloseButton.addActionListener(e -> {
+//			getParent().setVisible(false);
+//			getParent().getParent().validate();
+//			GameController.resumeGame();
+//		});
 	}
 
 	private static Panel wrapInPanel(Component component) {
@@ -55,4 +55,5 @@ public class MessagePanel extends Panel {
 //
 //	      return popupPanel;
 //	}
+
 }

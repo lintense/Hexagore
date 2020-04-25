@@ -91,7 +91,7 @@ public class Application extends Frame implements Runnable {
 		ac.init(panel);
 		
 		
-		GameController.startGame(ac);
+		GameController.startGame(ec);
 
 //		gbc.anchor = GridBagConstraints.NORTH;
 //		gbc.fill = GridBagConstraints.HORIZONTAL;

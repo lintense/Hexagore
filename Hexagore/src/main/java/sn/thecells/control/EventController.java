@@ -15,11 +15,14 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import sn.thecells.control.ActionController.Mover;
 import sn.thecells.entity.Hexagon;
+import sn.thecells.generic.InputRequest;
 import sn.thecells.support.Point2D;
-import sn.thecells.ui.HexagonChooser;
 
 public class EventController extends WindowAdapter implements MouseListener, MouseMotionListener, MouseWheelListener, ActionListener, ItemListener, ComponentListener, WindowListener {
 
@@ -31,13 +34,22 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 	int mouseY; // TODO useless?
 	int button;
 	ActionController ac;
-//	Graph p;
+	Map<String,EventListener> listeners = new HashMap();
+	
 	
 	public EventController(ActionController ac) {
 		super();
 		this.ac = ac;
-//		this.p = p;
-		
+	}
+	
+	public void gameEvent(InputRequest request) {
+		if (request.getListenerId() != null)
+			listeners.put(request.getListenerId(), (EventListener)request);
+		request.getPanel().addComponentListener(new ComponentListenerImpl(request.getListenerId()));
+		ac.showComponent(request.getPanel());
+	}
+	private void gameEventCompleted(ComponentListenerImpl cli) {
+		listeners.remove(cli.getListenerId());
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -45,7 +57,6 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 		ac.executeCommand(s);
 	}
 
-	//1.1 event handling
 	public void mouseClicked(MouseEvent e) {
 		button = e.getButton();
 		if (button == MouseEvent.BUTTON1) {
@@ -54,12 +65,16 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 			if (hex != null)
 				ac.test(hex.center);
 //			.neighbors.forEach(hex -> ac.test(hex.x, hex.y));
-			
 //			Hexagon.getHexes().forEach(hex -> ac.test(hex.x, hex.y));
-			
-			
 //			ac.test(e.getX(), e.getY());
 			ac.repaint();
+		}
+		Point2D drawingPoint = ac.getDrawingPointForMouse(e.getX(), e.getY());
+		for (EventListener l : listeners.values()) {
+			if (l instanceof InputRequest)
+				((InputRequest)l).setBoardCoordinates(drawingPoint);
+			if (l instanceof MouseListener)
+				((MouseListener)l).mouseClicked(e);
 		}
 	}
 
@@ -85,19 +100,18 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 		e.consume();
 	}
 
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) { // TODO
 		mouseX = e.getX();
 		mouseY = e.getY();
 		
-		if (true) { // TODO Avoid this process whenever possible...
-			Point2D drawingPoint = ac.getDrawingPointForMouse(e.getX(), e.getY());
-			Hexagon hex = Hexagon.getHex(drawingPoint);
-			if (hex != null) {
-				ac.p.setCursor(HexagonChooser.cursor);
-			} else {
-				ac.p.setCursor(null);
-			}
+		Point2D drawingPoint = ac.getDrawingPointForMouse(e.getX(), e.getY());
+		for (EventListener l : listeners.values()) {
+			if (l instanceof InputRequest)
+				((InputRequest)l).setBoardCoordinates(drawingPoint);
+			if (l instanceof MouseMotionListener)
+				((MouseMotionListener)l).mouseMoved(e);
 		}
+
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -188,5 +202,32 @@ public class EventController extends WindowAdapter implements MouseListener, Mou
 		w.dispose();
 		System.exit(0);
 	}
+	private class ComponentListenerImpl implements ComponentListener {
 
+		private final String listenerId;
+		public ComponentListenerImpl(String listenerId) {
+			super();
+			this.listenerId = listenerId;
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			// TODO Auto-generated method stub
+		}
+		@Override
+		public void componentMoved(ComponentEvent e) {
+			// TODO Auto-generated method stub
+		}
+		@Override
+		public void componentShown(ComponentEvent e) {
+			// TODO Auto-generated method stub
+		}
+		@Override
+		public void componentHidden(ComponentEvent e) {
+			gameEventCompleted(this);
+		}
+		public String getListenerId() {
+			return listenerId;
+		}
+	}
 }

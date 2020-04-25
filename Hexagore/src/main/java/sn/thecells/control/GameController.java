@@ -1,6 +1,5 @@
 package sn.thecells.control;
 
-import java.awt.Panel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,21 +9,23 @@ import java.util.stream.Collectors;
 import sn.thecells.entity.Card;
 import sn.thecells.entity.Crest;
 import sn.thecells.entity.Entity;
+import sn.thecells.entity.Hexagon;
 import sn.thecells.entity.Opponent;
 import sn.thecells.entity.Piece;
+import sn.thecells.generic.InputRequest;
 import sn.thecells.support.Common;
 import sn.thecells.support.Context;
 import sn.thecells.support.Deque;
 import sn.thecells.support.Label;
 import sn.thecells.support.Player;
+import sn.thecells.ui.HexagonChooser;
 import sn.thecells.ui.MessagePanel;
 import sn.thecells.ui.MultiChooser;
 import sn.thecells.ui.SingleChooser;
 import sn.thecells.ui.TextInput;
 
 public class GameController extends Thread {
-//implements Runnable {
-
+	
 	private static int TOTAL_CARDS = 40;
 	private static int MARKET_CARDS = 5;
 	private static int PLAYER_HAND = 5;
@@ -36,13 +37,15 @@ public class GameController extends Thread {
         	controller.notify();
         }
 	}
-	public static void startGame(ActionController ac) {
-		controller = new GameController(ac);
+	public static void startGame(EventController ec) {
+		controller = new GameController(ec);
 		controller.start();
 	}
-	private final ActionController ac;
-	private GameController(ActionController ac){
-		this.ac = ac;
+//	private final ActionController ac;
+	private final EventController ec;
+	
+	private GameController(EventController ec){
+		this.ec = ec;
 	}
 	
 	@Override
@@ -79,8 +82,10 @@ public class GameController extends Thread {
 		// Give random names to computer players
 		List<String> randomNames = getSomeNames();
 		List<Crest> availableCrests = Crest.getAll();
-		int i = 1;
+		List<Hexagon> availableVillages = Hexagon.getHexesForType(Hexagon.TYPE_VILLAGE);
+		int i = 0;
 		for (Player player : ctx.getPlayers()) {
+			i += 1;
 			// Select name
 			TextInput ti;
 			showMessage(ti = new TextInput(Label.get("ask.enter.player$0.name", Integer.toString(i)), Common.extractAny(randomNames), player.getPiece()));
@@ -97,7 +102,10 @@ public class GameController extends Thread {
 			availableCrests.remove(sc.getSelection());
 			player.setCrest((Crest)sc.getSelection());
 			
-			// HexagoneChooser Label.get("player.name$0.village.selection", player.getName())
+			HexagonChooser hc;
+			showMessage(hc = new HexagonChooser(Label.get("player.name$0.village.selection", player.getName()), availableVillages, Label.get("no.village.selected")));
+			availableVillages.remove(hc.getSelection());
+			player.setVillage(hc.getSelection());
 		}
 		
 		
@@ -117,8 +125,8 @@ public class GameController extends Thread {
 	private List<String> getSomeNames() {
 		return new ArrayList<String>(Arrays.asList(Label.get("Opponent.names").split(",")));
 	}
-	private void showMessage(Panel panel) { // Combine showMessage and Panel creation to directly return the selection
-		ac.showMessage(panel);
+	private void showMessage(InputRequest req) { // Combine showMessage and Panel creation to directly return the selection
+		ec.gameEvent(req);
 		pauseGame();
 	}
     private void pauseGame()
