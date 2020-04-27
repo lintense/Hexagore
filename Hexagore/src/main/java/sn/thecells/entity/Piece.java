@@ -31,14 +31,14 @@ public class Piece extends Entity {
 		};
 	}
 	
-	public final int strengh;
+	public final int strength;
 	public final int type;
 	public final int quantity;
 	public final int points;
 	
-	public Piece(String label, String propFile, int propIndex, int strengh, int type, int quantity, int points) {
+	public Piece(String label, String propFile, int propIndex, int strength, int type, int quantity, int points) {
 		super(label, propFile, propIndex);
-		this.strengh = strengh;
+		this.strength = strength;
 		this.type = type;
 		this.quantity = quantity;
 		this.points = points;
@@ -48,6 +48,9 @@ public class Piece extends Entity {
 	}
 	public static Piece get(String label) {
 		return Arrays.stream(pieces).filter(c -> label.equalsIgnoreCase(c.label)).findAny().get();
+	}
+	public int getStrength() {
+		return strength;
 	}
 	
 	/// Dynamic properties ///

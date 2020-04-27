@@ -1,9 +1,10 @@
-package sn.thecells.support;
+package sn.thecells.context;
 
 import sn.thecells.entity.Crest;
 import sn.thecells.entity.Hexagon;
 import sn.thecells.entity.Opponent;
 import sn.thecells.entity.Piece;
+import sn.thecells.support.Deque;
 
 public class Player {
 
