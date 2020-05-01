@@ -1,9 +1,7 @@
 package sn.thecells.context;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -61,9 +59,20 @@ import java.util.stream.Collectors;
  *		.map.collect (collect = key collection)
  *		MultiChooser
  *
- *	.check (Requires a OPEARTION_TYPE = boolean) Only ONE EXACT operation is allowed here!
+ *	.check (Requires a OPERATION_TYPE = boolean)
  *		Check if this phase has to be played.
  *		If false (i.e. no monster) then skip this phase and all its children entirely.
+ *		Can have many operations but all must be true for the phase to proceed. (AND)
+ *
+ *	Advantages:
+ *		Taking into account the available choosers.
+ *		Make the logic visible and allow insertion of dynamic operations.
+ *
+ * NICE: The phase manager which decide the appropriate chooser!
+ * 		i.e .collect.select that chooses from a collection
+ * 		i.e .map.select
+ * 			collect (player pieces), collect (opponent types)
+ * 
  *
  */
 public class Phase {

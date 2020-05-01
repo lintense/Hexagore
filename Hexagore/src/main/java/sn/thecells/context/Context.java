@@ -15,10 +15,60 @@ import sn.thecells.support.Deque;
  * Eventually, context could be copied and compare.
  * It should also have a status (unchanged, changed) for all its field.
  * 
+ * The context states are role based.
+ * When entering certain state, the current entity is copied into a role state.
+ * 
+ * Some useful update operations:
+ * pop_currentPlayer : entity = currentPlayer
+ * push_attacker : attacker = entity
+ * 
+ * -------------------------------
+ * 
+ * Nouvelle tentative:
+ * 	On veut que la phase soit sous-jacente au processus.
+ * 	On veut aussi créer une structure de données qui reflète la phase (un peu comme l'engin de test)
+ * 
+ * 	Pour chaque nouvelle phase: (non collection)
+ * 		Initialiser la structure
+ * 		Calculer les valeurs possibles (Contraintes des cartes, des actions, etc)
+ * 		Sélectionner la valeur (selectAny, selectUnused)
+ * 		Insérer la valeur
+ * 
+ * 	Action primitive: Le moins possible
+ * 		move(entity, case)
+ * 
+ * 	Le setup du jeu consiste à initialiser le context (donc la structure)
+ * 		Chaque branche de la structure est une phase
+ * 		Action.Move.MonsterAttack...
+ * 
+ * 		Ex: init("move")
+ * 		Action.move.count = 0;
+ * 		Action.move.allowed = true;
+ * 		Action.move.origin = ctx.currentPlayer.location; // Origin inherits all location fields.
+ * 
+ * 
+ * 		La phase peut être utiliser comme une contrainte:
+ * 		Example: Phase = Action.player.move:
+ * 		Current Player uses Sir Talbot card to make its move:
+ * 
+ * 		Any card (but events): [phase == move] => [move.count + 1]
+ * 		Card: Sir Talbot [phase == move] => [move.count + 1]
+ * 		Hex: [move.origin.type == village], [!move.destination.hasPieces] => [move.count + 1]
+ * 		Event flood: [location.type == field] => [location.type = river]
+ * 		Event flood: [move.origin.type == field] => [move.origin.type = river] 
+ * 		Game: [phase == move],[currentPlayer.paused] => [move.destination = move.origin],[currentPlayer.paused = false]
+ * 		Game: [move.destination.type == river] => [currentPlayer.paused = true]
+ * 		Game: [phase == move],[move.origin != river] => [currentPlayer.paused = false]
+ * 		Hex: [phase == move],[move.origin == V1] => [move.destination += F1], [move.destination.type = field]
+ * 		Hex: [phase == move],[move.origin == V1] => [move.destination += F2], [move.destination.type = field]
+ * 
+ * 		Game: [phase == move],[move.destination != move.origin],[move.origin.hasMonsters] => init("MonsterAttack") // Only if all previous requirements are met
+ * 
+ * 
+ * 		getPossibles(move.destination) // Using all entity constraints
+ * 
  */
 public class Context {
-
-	private List<Location> locations;
 	
 	// Phase buffers
 	// It is very important that the order of the operations have no effect on the outcome
@@ -26,6 +76,7 @@ public class Context {
 	// Same for collectAdds and collectSubs
 	// A map.put CANNOT be override, it must be final!
 	
+	// Current states
 	private int count;
 	private Entity entity; // Curerent entity
 	private List<Entity> collectAdd = null;
@@ -33,19 +84,25 @@ public class Context {
 	private Map<Entity, Entity> map = null;
 	
 	
-	// Combat
+	// Combat roles
 	private Player attacker;
 	private Player defender;
 	private Location arena;
 	private Player winner;
 	private Player loser;
 	
-	private List<Player> players;
+	// Game roles
+	
 	private int firstPlayer;
 	private int currentPlayer;
+	
+	// Game state
+	private List<Location> locations;
+	private List<Player> players;
 	private Deque market;
 	private Deque draw;
 	private Deque trash;
+	
 	public List<Player> getPlayers() {
 		return players;
 	}

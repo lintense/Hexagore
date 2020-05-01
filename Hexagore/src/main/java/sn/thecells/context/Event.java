@@ -6,7 +6,7 @@ package sn.thecells.context;
  *	Events arise during the course of the game.
  *	Only events are allowed to INSERT or REMOVE operations from the Operation collection.
  *
- *	This will allow the logging of every changes 
+ *	This will allow the logging of every changes (May not be necessary...)
  */
 public class Event {
 

@@ -17,7 +17,7 @@ public class Opponent extends Entity {
 	private static final String FILE_PIECES = "Pieces_210x226";
 	
 	static {
-		int i = 7;
+		int i = 12;
 		opponents = new Opponent[] {
 			new Opponent("Opponent.0",FILE_PIECES,i++,TYPE_NONE),
 			new Opponent("Opponent.1",FILE_PIECES,i++,TYPE_PLAYER),

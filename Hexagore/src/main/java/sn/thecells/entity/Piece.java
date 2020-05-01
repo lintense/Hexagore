@@ -19,15 +19,17 @@ public class Piece extends Entity {
 	static {
 		int i = 0;
 		pieces = new Piece[] {
-			new Piece("Piece.1",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
-			new Piece("Piece.2",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
-			new Piece("Piece.3",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
-			new Piece("Piece.4",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
-			new Piece("Piece.5",FILE_PIECES,i++,1,TYPE_MONSTER,10,1),
-			new Piece("Piece.6",FILE_PIECES,i++,2,TYPE_MONSTER,10,2),
-			new Piece("Piece.7",FILE_PIECES,i++,3,TYPE_MONSTER,10,3),
-			new Piece("Piece.8",FILE_PIECES,i++,0,TYPE_TREASURE,20,10),
-			new Piece("Piece.9",FILE_PIECES,i++,1,TYPE_SKULL,30,1)
+			new Piece("Player.1",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
+			new Piece("Player.2",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
+			new Piece("Player.3",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
+			new Piece("Player.4",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
+			new Piece("Player.5",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
+			new Piece("Player.6",FILE_PIECES,i++,1,TYPE_PLAYER,1,0),
+			new Piece("Monster.1",FILE_PIECES,i++,1,TYPE_MONSTER,10,1),
+			new Piece("Monster.2",FILE_PIECES,i++,2,TYPE_MONSTER,10,2),
+			new Piece("Monster.3",FILE_PIECES,i++,3,TYPE_MONSTER,10,3),
+			new Piece("Treasure",FILE_PIECES,i++,0,TYPE_TREASURE,20,10),
+			new Piece("Skull",FILE_PIECES,i++,1,TYPE_SKULL,30,1)
 		};
 	}
 	
