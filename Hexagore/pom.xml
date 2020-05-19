@@ -16,7 +16,13 @@
 	  </plugins>
   </build>
   <dependencies>
-
+	<dependency>
+		<groupId>com.ugo.jiprolog</groupId>
+		<artifactId>jiprolog</artifactId>
+		<version>4.1.6.1</version>
+		<scope>system</scope>
+		<systemPath>${basedir}/lib/jiprolog-4.1.6.1.jar</systemPath>
+	</dependency>
 	<dependency>
 		<groupId>net.sf.javavp8decoder</groupId>
 		<artifactId>javavp8decoder</artifactId>

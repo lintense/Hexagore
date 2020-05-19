@@ -1,0 +1,186 @@
+
+Please note:
+This program is licenced under MIT
+but it contains GPLv3 librairies that are hanshoked with this program (At a handshake level - where the programs call each other's subroutines (aka "functions") directly and exchange data directly, they also both run in the same process(are they?))
+https://opensource.stackexchange.com/questions/5447/to-which-extent-gpl-license-contaminates-my-project
+https://en.wikipedia.org/wiki/GNU_General_Public_License#Linking_and_derived_works
+
+To avoid contamination, lib should run in another process and not share data structures...
+Or the library should be under GNU Classpath (LGPL)
+https://www.gnu.org/software/classpath/license.html
+
+-=-=-
+
+Why Prolog:
+Prolog allows to create terse scripts that are easier to read and maintain.
+
+
+
+
+
+
+
+TRY: XProlog
+https://www.iro.umontreal.ca/~vaucher/XProlog/AA_README
+Demo program in java
+https://www-labs.iro.umontreal.ca/~vaucher/XProlog/Go.java (Marche pas, null package...)
+https://faculty.arts.ubc.ca/winder/edziza/rp/W-Prolog.html
+https://vmlanguages.is-research.de/tag/prolog/
+https://www.gnu.org/software/gnuprologjava/ (Le demo ne fonctionne pas...)
+
+Why GNU Prolog for Java
+- LGPL so I can freely choose my own licence
+- A bit slow (compared to Swipl...)
+- BUT: It can only load files... (cannot read Strings directly)
+
+Why JIProlog
+- Embeded
+- Small footprint
+- Real prolog clauses instead of Java hardcodes.
+- Works with Java 11 JVM
+
+Why not Drools?
+- Simply put: too huge for what I need.
+- But also not clean clauses but Java hardcodes.
+- I want to have all my rules in a single file.
+
+Why not JPL?
+- Requires the installation of Swipl.
+- Does not work with Java 11.
+
+-=-=-
+
+package SistersRules; 
+import org.drools.jsr94.rules.Person; 
+global java.util.List list
+rule FindSisters 
+when 
+    $person1 : Person ( $name1:name ) 
+    $person2 : Person ( $name2:name ) 
+    eval( $person1.hasSister($person2) ) 
+then 
+    list.add($person1.getName() + " and " + $person2.getName() +" are sisters"); 
+    assert( $person1.getName() + " and " + $person2.getName() +" are sisters"); 
+end
+
+VS 
+
+hasSister(X,Y):-...
+
+PropertyChangeListener allows the use of "modified" java beans:
+public void setState(final int newState) {
+
+    int oldState = this.state;
+
+    this.state = newState;
+
+    this.changes.firePropertyChange( "state",
+
+                                     oldState,
+
+                                     newState );
+
+}
+
+-=-=-
+
+Why AWT rather than Swing?
+- does this changes the size of the program?
+- Less is more...
+Why Java 8?
+- Portability
+
+Algo:
+- initiate a new phase
+- create the prolog file using all game objects states.
+- consult the file
+- do some queries
+- gather answers
+- optionally choose effects 
+- apply effects
+
+// Command for Java
+insert_phase() : Add a new phase on top of the current phase
+choose_from_list() : Should ask player for choosing.
+
+// Use permissions for reuse
+perm_to_occupy(HEX):-
+perm_to_move(ORIGIN,DESTINATION):- phase("move.phase").
+perm_to_buy():- not(rule_active("market.closed",game).
+hex_is_empty(HEX):-
+hex_type(HEX,)
+
+// List of card that have been played and not yet retired
+// player, other, game
+card_played("market.closed",game).
+card_played("sir.talbot",player).
+
+// Game state
+current_direction(0).
+
+phase("move.phase").
+current_player(1).
+player_hex(1, "hex.f12").
+player_object(1, gold(1)).
+hex_occupant("hex.f12", monster(2)).
+hex_occupant("hex.f12", skulls(2)).
+hex_occupant("hex.f12", big("bridge")).
+hex_occupant("hex.f12", small("horses")).
+
+
+
+
+// For each card, describe its action
+rule_active(X):- rule(X, A,_), check(A).
+
+
+
+// Game rules (facts)
+rule("move.phase", [perm_to_move(),card_played(_,player)], [move_count(move_card)]).
+rule("sir.talbot", [perm_to_move(),card_played("sir.talbot",player)],[move_count(card_sir_talbot),attack_count(card_sir_talbot,player)]).
+rule("hex.fougue", [perm_to_move(),origin(village),not(destination(_))],[move_count(hex_fougue)]).
+// Game events
+rule("market.closed.event",[phase(market),card_played("market.closed",game)]).
+rule("dragon.event", [card_played("dragon.event",game)],[retractall(hex_occupant(_,gold(_)),retractall(player_object(_, gold(_)))]).
+rule("auction.event", [card_played("auction.event",game)],[retract(phase(_)),insert_phase("auction.phase")]).
+rule("mountain.invasion.event", [card_played("mountain.invasion.event",game)], [member(HEX,["hex.m1","hex.m2","hex.m3"]),not(hex_occupant(HEX, monster(_))),missing_mountain_monster(M),hex(HEX),monster(M)]).
+rule("mountain.invasion.event", [card_played("mountain.invasion.event",game),hex_type(HEX,mountain), not(hex_occupant(HEX, monster(_))),NOT(member(HEX,["hex.m1","hex.m2","hex.m3"]))],
+	[hex_type(HEX,mountain), not(hex_occupant(HEX, monster(_))),random_member(M,[1,2,3]), hex(HEX),monster(M)]).
+rule("earthquake.event", [card_played("earthquake.event",game)], [player_hex(P, HEX), retract(hex_occupant(HEX, gold(N2))), retract(player_object(P, gold(N1))),add(N1,N2,T), assert(hex_occupant(HEX, gold(T)))]).
+rule("earthquake.event", [card_played("earthquake.event",game)], [player_hex(P, HEX), not(hex_occupant(HEX, gold(_))), retract(player_object(P, gold(T))),assert(hex_occupant(HEX, gold(T)))]).
+rule("siren.event", [card_played("siren.event",game)], [current_direction(DIR), retract(player_hex(P,HEX)),hex_height(HEX,H),hex_limit(HEX,DIR,LIMIT),assert(player_hex(P,LIMIT))]).
+rule("mutation.event", [card_played("mutation.event",game)], [hex_occupant(HEX, monster(M)),choose_from_list(hex(HEX),monster(M))]).
+
+
+
+
+
+check([]):- !.
+check([X|Y]):- clause(X,_),!,check(Y).
+
+apply_effects([], A, B):- write(A), retract(A), write(' being replaced by '), writeln(B), assertz(B),!.
+apply_effects([X|Y], A, B):- clause(X,_),!,apply_effects(Y, A, B).
+
+missing_mountain_monster(M):- member(M,[1,2,3]),not(hex_occupant("hex.m1", monster(M))),not(hex_occupant("hex.m2", monster(M))),not(hex_occupant("hex.m3", monster(M))),!.
+
+hex_height(HEX)// how many hexes are directly under hex. River=4, Mountain=5, etc.
+hex_limit(HEIGHT, DIRECTION).
+hex_limit(6, 0, "hex.m1").
+hex_limit(6, 1, "hex.m3").
+hex_limit(5, 0, "hex.for1").
+hex_limit(5, 1, "hex.for5").
+hex_limit(4, 0, "hex.r1").
+hex_limit(4, 1, "hex.r7").
+hex_limit(3, 0, "hex.f1").
+hex_limit(3, 1, "hex.f9").
+hex_limit(2, 0, "hex.f10").
+hex_limit(2, 1, "hex.f20").
+hex_limit(1, 0, "hex.f21").
+hex_limit(1, 1, "hex.f25").
+
+random_monster(M,HEX):-findall(H,hex_occupant(H, monster(_)),L),random_member(HEX,L),hex_occupant(HEX, monster(M)),!.
+add_skull(HEX):-(retract(hex_occupant(HEX, skulls(N)));N=0),add(N,1,NN),assert(hex_occupant(HEX, skulls(NN))),!.
+
+
+//[missing_mountain_monster(M), assert(hex_occupant("hex.m1", monster(M)))]).
+//random_monster(M,HEX),add_skull(HEX)
