@@ -17,11 +17,11 @@
   </build>
   <dependencies>
 	<dependency>
-		<groupId>com.ugo.jiprolog</groupId>
-		<artifactId>jiprolog</artifactId>
-		<version>4.1.6.1</version>
+		<groupId>gnu.prolog.java</groupId>
+		<artifactId>gnuprologjava</artifactId>
+		<version>1.0</version>
 		<scope>system</scope>
-		<systemPath>${basedir}/lib/jiprolog-4.1.6.1.jar</systemPath>
+		<systemPath>${basedir}/lib/gnuprologjava-0.2.6.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>net.sf.javavp8decoder</groupId>
