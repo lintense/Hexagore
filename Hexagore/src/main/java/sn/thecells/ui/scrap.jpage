@@ -1,0 +1,4 @@
+The method getPrologScript(StringWriter) is undefined for the type Hexagon
+//StringWriter cannot be resolved to a typeThe method writePrologScript(Writer) from the type Hexagon refers to the missing type Writer
+//java.io.StringWriter w = new java.io.StringWriter();java.io.OutputStreamWriter os = new java.io.OutputStreamWriter(System.out);sn.thecells.entity.Hexagon.writePrologScript(os);os.close();
+//w.toString();

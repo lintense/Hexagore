@@ -3,3 +3,7 @@
 .project
 org.eclipse.jdt.core.prefs
 org.eclipse.m2e.core.prefs
+obsolete
+orig
+unused
+demo
