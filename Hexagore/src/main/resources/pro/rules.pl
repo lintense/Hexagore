@@ -3,7 +3,9 @@ THIS IS WORKING GREAT!!!
 - MISSING NEIGHBORS
 - NO NEED TO REPEAT THE WHEN PART IN THE THEN PART!!!
 
-working_directory(CWD,'D:/MY_GIT/Hexagore/doc').
+-- Set Notepad language to Visual Prolog
+working_directory(CWD,'D:/MY_GIT/Hexagore/Hexagore/src/main/resources/pro').
+
 consult(test1).
 rule(X,Y,Z),check_do(Y),write(Z),check_do(Z),fail.
 
