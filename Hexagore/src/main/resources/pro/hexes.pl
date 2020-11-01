@@ -337,3 +337,17 @@ hex_neb_base(hex_v6,hex_p2a).
 hex_neb_base(hex_v6,hex_p2b).
 hex_neb_base(hex_v6,hex_p15).
 
+hex_limit(hex_p11,left,1).
+hex_limit(hex_p15,right,1).
+hex_limit(hex_p21,left,2).
+hex_limit(hex_p2b,right,2).
+hex_limit(hex_p31,left,3).
+hex_limit(hex_p39,right,3).
+hex_limit(hex_r41,left,4).
+hex_limit(hex_r47,right,4).
+hex_limit(hex_f51,left,5).
+hex_limit(hex_f55,right,5).
+hex_limit(hex_m61,left,6).
+hex_limit(hex_m63,right,6).
+hex_limit(hex_g71,left,7).
+hex_limit(hex_g71,right,7).

@@ -1,3 +1,5 @@
+package sn.thecells.control;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import gnu.prolog.vm.Environment;
 
 public class PrologWrapper extends Environment {
 //	private int count = 0;
-	private HashMap<String,String> requests = new HashMap<String,String>();
+	HashMap<String,String> requests = new HashMap<String,String>();
 	
 	public void ensureLoaded(String name, String code) {
 		requests.put("'" + name + "'", code);

@@ -1,0 +1,1 @@
+swipl -s run.pl -g go -t halt

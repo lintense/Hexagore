@@ -1,4 +1,4 @@
-
+package sn.thecells.control;
 
 import gnu.prolog.database.PrologTextLoaderError;
 import gnu.prolog.demo.mentalarithmetic.NoAnswerException;
@@ -14,7 +14,7 @@ import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +41,7 @@ public class TestGnuPro {
 	 * @see #setup() for creation
 	 * @see #generateQuestion(int,int) for usage
 	 */
-	private static PrologWrapper env;
+	private static final PrologWrapper env = new PrologWrapper();
 	/**
 	 * The {@link Interpreter} we are using.
 	 * 
@@ -55,15 +55,17 @@ public class TestGnuPro {
 	 * 
 	 * @param args
 	 *          as detailed in {@link #USAGE}
+	 * @throws NoAnswerException 
+	 * @throws PrologException 
 	 * @throws IOException 
 	 * @see #USAGE
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws PrologException, NoAnswerException
 	{
 		int limit, length;// @see #USAGE
 		
-		try
-		{
+//		try
+//		{
 			// Get the question to ask
 //			Pair<String, Integer> question = 
 			generateQuestion();
@@ -91,25 +93,64 @@ public class TestGnuPro {
 //			{
 //				System.err.println(String.format("Not a number: (%s)", answer));
 //			}
-		}// Something went wrong: tell the user.
-		catch (PrologException e)
-		{
-			System.err.println(e.toString());
-		}
-		catch (NoAnswerException e)
-		{
-			System.err.println(e.toString());
-		}
+//		}// Something went wrong: tell the user.
+//		catch (PrologException e)
+//		{
+//			System.err.println(e.toString());
+//		}
+//		catch (NoAnswerException e)
+//		{
+//			System.err.println(e.toString());
+//		}
 //		catch (IOException e)
 //		{
 //			System.err.println(e.toString());
 //		}
 	}
-
+	public static void replace(String query, String oldVal, String newVal) throws PrologException {
+		CompoundTerm t1 = new CompoundTerm(AtomTerm.get(query),new Term[] {AtomTerm.get(oldVal)});
+		CompoundTerm t2 = new CompoundTerm(AtomTerm.get(query),new Term[] {AtomTerm.get(newVal)});
+		CompoundTerm goal = new CompoundTerm(AtomTerm.get("replace"), new Term[] {t1,t2});
+		int r = interpreter.execute(interpreter.prepareGoal(goal));
+		System.out.println("REPLACE> " + goal.toString());
+		debug();
+	}
+	public static void set(String query, String value) throws PrologException {
+		CompoundTerm goal = new CompoundTerm(AtomTerm.get(query), new Term[] {AtomTerm.get(value)});
+		int r = interpreter.execute(interpreter.prepareGoal(goal));
+		System.out.println("SET> " + goal.toString());
+		debug();
+	}
+	public static List<String> get(String query) throws PrologException {
+		synchronized (interpreter) {
+			List<String> result = new ArrayList<>();
+			VariableTerm var = new VariableTerm("Y");
+			CompoundTerm term = new CompoundTerm(AtomTerm.get(query), new Term[]{var});
+			
+			Goal goal = interpreter.prepareGoal(term);
+			int rc = PrologCode.SUCCESS;
+			while (rc == PrologCode.SUCCESS)
+			{
+				rc = interpreter.execute(goal);
+				String x = TermWriter.toString(var.dereference());
+				System.out.println("GET> " + query + "(X). X = " + x);
+				result.add(x);
+			}
+			debug();
+			return result;
+		}
+	}
 	public static void generateQuestion() throws PrologException, NoAnswerException
 	{
 		setup();
-
+		
+		// Test get/set current phase
+		get("current_phase");
+		replace("current_phase", "market", "move");
+		get("current_phase");
+		get("goal");
+		
+/*
 		// // Construct the question.
 		// Create variable terms so that we can pull the answers out later
 		VariableTerm x = new VariableTerm("X");
@@ -124,13 +165,13 @@ public class TestGnuPro {
 		CompoundTerm goalTerm1 = new CompoundTerm(AtomTerm.get("set_phase"), new Term[] {AtomTerm.get("move")});
 		debug();
 		int r = interpreter.execute(interpreter.prepareGoal(goalTerm1)); //,retract(current_phase(_))")));
+		System.out.println("--->  " + goalTerm1.toString());
 		debug();
 		CompoundTerm goalTerm2 = new CompoundTerm(AtomTerm.get("current_phase"), new Term[]{y});
 		interpreter.execute(interpreter.prepareGoal(goalTerm2));
+		System.out.println("--->  " + goalTerm2.toString());
 		Term xv2 = y.dereference();
 		System.out.println("--->  " + TermWriter.toString(xv2));
-		
-		
 		
 		CompoundTerm goalTerm = new CompoundTerm(AtomTerm.get("goal"), new Term[]{x});
 		synchronized (interpreter)// so that this class is thread safe.
@@ -212,7 +253,7 @@ public class TestGnuPro {
 //			{
 //				throw new NoAnswerException("Goal failed");
 			}
-		}
+		}*/
 	}
 //	private static String listToString(CompoundTerm list) {
 //		ArrayList<Term> al = new ArrayList();
@@ -240,18 +281,21 @@ public class TestGnuPro {
 		
 		// Construct the environment
 //		env = new Environment(pipedInputStream, System.out);
-		env = new PrologWrapper();
 		debug();
 //		env.getPrologTextLoaderState().
 
 		// get the filename relative to the class file
-		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getResource("test0.pro").getFile()));
-		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getResource("test1.pro").getFile()));
-		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getResource("test2.pro").getFile()));
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/hexes.pl").getFile()));
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/phases.pl").getFile()));
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/parms.pl").getFile()));
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/cards.pl").getFile()));
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/states.pl").getFile()));
+		
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/rules.pl").getFile()));
+		env.ensureLoaded(AtomTerm.get(TestGnuPro.class.getClassLoader().getResource("pro/test2.pro").getFile()));
 		
 //		String goal = "goal(Q):- rule(X,Y,Z),check_do(Y),check_do(Z),Q=choose_from_list([hex(HEX),monster(M)]), member(Q,Z).";
 //		InputStream in = new ByteArrayInputStream(goal.getBytes(Charset.forName("UTF-8")));
-		
 		
 		
 		// Get the interpreter.
@@ -267,10 +311,13 @@ public class TestGnuPro {
 //		    len = in.read(buffer);
 //		}
 //		env.ensureLoaded(IntegerTerm.get(1));
-		env.ensureLoaded("X1", ":- multifile(goal/1). :- dynamic(goal/1). goal(Q).");
+		/*
+		env.ensureLoaded("X1", ":- dynamic(goal/1), multifile(goal/1), asserta(goal(1)).");
 		env.runInitialization(interpreter);
-		env.ensureLoaded("X2", ":- retractall(goal(_)). goal(Q):-Q=2.");
+		env.ensureLoaded("X2", ":- retractall(goal(_)).");
 		env.runInitialization(interpreter);
+		*/
+		env.ensureLoaded("X1", "replace(X,Y):- retract(X),asserta(Y).");
 		env.ensureLoaded("X3", "goal(Q):- rule(X,Y,Z),check_do(Y),check_do(Z),Q=choose_from_list([hex(HEX),monster(M)]), member(Q,Z).");
 		env.runInitialization(interpreter);
 		

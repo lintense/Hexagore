@@ -1,4 +1,4 @@
-/* HEXAGORE
+/* HEXAGORE - parms.pl
 
 The game parameters.
 - These parameter are setup before the game starts and stay the same during the whole game.
@@ -12,12 +12,21 @@ The game parameters.
 - shopping: Player must be in the village to buy cards.
 - welcome: Player receive an extra card when arriving in its village.
 
-- chaos_level: Determine which event card should be included in the game.
+- chaos_level: Determine which event cards should be included in the game.
 */
 
-game_options([fiery,ambush,camouflage,crawling,gold_multiple_bags]).
+game_option(fiery).
+game_option(ambush).
+game_option(camouflage).
+game_option(swiming).
+game_option(gold_multiple_bags).
+
+log_level(3).
 chaos_level(3).
 events_per_turn(1).
 
-nb_cards_basic(20).
-nb_cards_per_players(10).
+market_basic_cards(20).
+market_player_cards(10).
+player_basic_cards(5).
+
+players([a,b,c,d]).

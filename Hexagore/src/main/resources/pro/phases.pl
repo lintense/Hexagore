@@ -9,10 +9,12 @@
 	- Some phase are gatering info (where to store?)
 	- Some phase are taking decisions
 	- 
-	
+	phase([complete,phase,name],[commands,to,apply]).
 	
 	
 */
+
+:- dynamic(phase/2).
 
 phase([game],[]).
 phase([game,setup],[]).
@@ -22,7 +24,7 @@ phase([game,setup,board,init,draw],[]).
 phase([game,setup,board,init,market],[]).
 phase([game,setup,board,init,trash],[]).
 phase([game,setup,player],[]).
-phase([game,setup,player,n],[]).
+phase([game,setup,player,n],[member(_,[1,2,3])]).
 phase([game,setup,player,n,get],[]).
 phase([game,setup,player,n,get,name],[]).
 phase([game,setup,player,n,get,crest],[]).
@@ -33,7 +35,7 @@ phase([game,setup,player,n,init,hand],[]).
 phase([game,setup,player,n,init,trash],[]).
 phase([game,setup,player,first],[]).
 phase([game,turn],[]).
-phase([game,turn,n],[]).
+phase([game,turn,n],[member(_,[1,2])]).
 phase([game,turn,n,init],[]).
 phase([game,turn,n,init,player],[]).
 phase([game,turn,n,init,player,reset],[]).
@@ -44,11 +46,11 @@ phase([game,turn,n,init,board,reset,market],[]).
 phase([game,turn,n,play],[]).
 phase([game,turn,n,play,check],[]).
 phase([game,turn,n,play,event],[]).
-phase([game,turn,n,play,event,n],[]).
+phase([game,turn,n,play,event,n],[member(_,[1,2])]).
 phase([game,turn,n,play,event,n,process],[]).
 phase([game,turn,n,play,player],[]).
 phase([game,turn,n,play,player,first],[]).
-phase([game,turn,n,play,player,n],[]).
+phase([game,turn,n,play,player,n],[member(_,[1,2,3])]).
 phase([game,turn,n,play,player,n,action],[]).
 phase([game,turn,n,play,player,n,action,a],[sub_phase(P),choose_from_list(action(P))]).
 phase([game,turn,n,play,player,n,action,a,buy],[]).
@@ -136,17 +138,23 @@ phase([game,turn,n,play,market,monster,n,place],[]).
 phase([game,turn,n,reset],[]).
 phase([game,turn,n,reset,first],[]).
 
-next_elem(LIST,ELEM,NEXT):-nth0(N,LIST,ELEM),NN is N+1,nth0(NN,LIST,NEXT).
+
 sub_phase(PHASE,CHILD,CHILD_PHASE):-append([PHASE,[CHILD]],CHILD_PHASE),phase(CHILD_PHASE,_).
 all_sub_elem(PHASE,SUBS):-findall(SUB, sub_phase(PHASE,SUB,_), SUBS),!.
+all_sub_phases(PHASE,SUBS):-findall(SUB_PHASE, sub_phase(PHASE,_,SUB_PHASE), SUBS),!.
 
 parent_phase(PHASE,PARENT,CHILD):-append([PARENT,[CHILD]],PHASE),!.
 next_sibling_phase(PHASE,SIBLING,SIBLING_PHASE):-parent_phase(PHASE,PARENT,CHILD),all_sub_elem(PARENT,SUBS),nth0(N,SUBS,CHILD),NN is N+1,nth0(NN,SUBS,SIBLING),!,append([PARENT,[SIBLING]],SIBLING_PHASE).
 
+
+insert_phase(NAME,COMMANDS):-asserta(phase(NAME,COMMANDS)),!.
+retract_phase(NAME):-retract(phase(NAME,_)),!.
+
+/*
 next_phase([done|PHASE],NEXT_PHASE):-next_sibling_phase(PHASE,_,NEXT_PHASE),!;parent_phase(PHASE,PARENT,_),NEXT_PHASE = [done|PARENT],!.
 next_phase(PHASE,NEXT_PHASE):-sub_phase(PHASE,_,NEXT_PHASE),!;next_sibling_phase(PHASE,_,NEXT_PHASE),!;parent_phase(PHASE,PARENT,_),NEXT_PHASE = [done|PARENT],!.
 
-/*
+next_elem(LIST,ELEM,NEXT):-nth0(N,LIST,ELEM),NN is N+1,nth0(NN,LIST,NEXT).
 next_sub_phase([done|PHASE],NEXT,NEXT_PHASE)
 next_sub_phase(PHASE,NEXT,NEXT_PHASE):-parent_phase(PHASE,PARENT,CHILD),all_sub_elem(PARENT,SUBS),next_elem(SUBS,CHILD,NEXT),parent_phase(NEXT_PHASE,PARENT,NEXT),!.
 
