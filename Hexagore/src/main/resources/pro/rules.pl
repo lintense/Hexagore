@@ -43,22 +43,27 @@ rule(mountain_invasion_event, [card_played(mountain_invasion_event,game),hex_typ
 	[member(M,[1,2,3]),choose_from_list([hex(HEX),monster(M)])]).
 
 
+
+check_do([]):- !.
+check_do([X|_]):- log_debug('check_do:',X),fail.
+check_do([not(member(X1,X2))|Y]):- !,\+ member(X1,X2),log_debug(not(member(X1,X2)),'ok'),check_do(Y).
+check_do([not(X)|Y]):- !,\+ call(X),log_debug(not(X),'...ok'),check_do(Y).
+check_do([member(X1,X2)|Y]):- !,member(X1,X2),log_debug(member(X1,X2),'...ok'),check_do(Y).
+check_do([missing_mountain_monster(M)|Y]):- !,missing_mountain_monster(M),log_debug(missing_mountain_monster(M),'ok'),check_do(Y).
+
+check_do([X|Y]):-call(X),log_debug(X,'...ok'),check_do(Y).
+
+
+missing_mountain_monster(M):- member(M,[1,2,3]),\+ hex_occupant(hex_m1, monster(M)),\+ hex_occupant(hex_m2, monster(M)),\+ hex_occupant(hex_m3, monster(M)).
+
+
+extreme(HEIGHT,DIR, HEX):- findall(H,hex_height(H,HEIGHT),L), sort(L,LL),(DIR = left -> LL = [HEX|_] ; last(LL,HEX)).
+
+/*
 check([]):- !.
 check([X|Y]):- clause(X,_),check(Y).
 
 apply_effects([], A, B):- write(A), retract(A), write(' being replaced by '), write(B), assertz(B),!.
 apply_effects([X|Y], A, B):- clause(X,_),!,apply_effects(Y, A, B).
 
-check_do([]):- !.
-check_do([X|_]):- log_debug('check_do:',X),fail.
-check_do([not(member(X1,X2))|Y]):- !,\+ member(X1,X2),log_debug(not(member(X1,X2)),'ok'),check_do(Y).
-check_do([not(X)|Y]):- !,\+ clause(X,_),log_debug(not(X),'...ok'),check_do(Y).
-check_do([member(X1,X2)|Y]):- !,member(X1,X2),log_debug(member(X1,X2),'...ok'),check_do(Y).
-check_do([missing_mountain_monster(M)|Y]):- !,missing_mountain_monster(M),log_debug(missing_mountain_monster(M),'ok'),check_do(Y).
-
-check_do([X|Y]):-clause(X,_),log_debug(X,'...ok'),check_do(Y).
-
-missing_mountain_monster(M):- member(M,[1,2,3]),\+ hex_occupant(hex_m1, monster(M)),\+ hex_occupant(hex_m2, monster(M)),\+ hex_occupant(hex_m3, monster(M)).
-
-
-extreme(HEIGHT,DIR, HEX):- findall(H,hex_height(H,HEIGHT),L), sort(L,LL),(DIR = left -> LL = [HEX|_] ; last(LL,HEX)).
+*/

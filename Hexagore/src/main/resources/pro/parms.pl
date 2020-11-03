@@ -21,7 +21,7 @@ game_option(camouflage).
 game_option(swiming).
 game_option(gold_multiple_bags).
 
-log_level(3).
+log_level(4).
 chaos_level(3).
 events_per_turn(1).
 
@@ -29,4 +29,4 @@ market_basic_cards(20).
 market_player_cards(10).
 player_basic_cards(5).
 
-players([a,b,c,d]).
+players([p1,p2,p3,p4]).
